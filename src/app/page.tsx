@@ -3,7 +3,10 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <Box component="main" sx={{ px: 3, py: 4, maxWidth: 960, mx: "auto" }}>
+    <Box
+      component="main"
+      sx={{ px: 3, py: 4, maxWidth: 960, mx: "auto", minHeight: "70vh" }}
+    >
       <Box sx={{ display: "flex", justifyContent: "center", mt: 10, px: 2 }}>
         <Sheet
           variant="outlined"

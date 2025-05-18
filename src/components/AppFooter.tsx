@@ -68,6 +68,73 @@ const AppFooter = () => (
       </Stack>
 
       <Typography level="body-xs" mt={2} color="neutral">
+        Built with{" "}
+        <Link
+          component={NextLink}
+          href="https://nextjs.org"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Next.js
+        </Link>
+        ,{" "}
+        <Link
+          component={NextLink}
+          href="https://wagmi.sh"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          wagmi
+        </Link>
+        ,{" "}
+        <Link
+          component={NextLink}
+          href="https://viem.sh"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          viem
+        </Link>
+        ,{" "}
+        <Link
+          component={NextLink}
+          href="https://mui.com/joy-ui/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Joy UI
+        </Link>
+        ,{" "}
+        <Link
+          component={NextLink}
+          href="https://tanstack.com/query"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          TanStack Query
+        </Link>
+        ,{" "}
+        <Link
+          component={NextLink}
+          href="https://tanstack.com/table"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          TanStack Table
+        </Link>
+        , and{" "}
+        <Link
+          component={NextLink}
+          href="https://www.alchemy.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Alchemy
+        </Link>
+        .
+      </Typography>
+
+      <Typography level="body-xs" mt={2} color="neutral">
         © {new Date().getFullYear()} Vijay Pushkin. All rights reserved.
       </Typography>
     </Sheet>
