@@ -1,70 +1,108 @@
 "use client";
 
-import { useMemo } from "react";
-import { Typography, Button } from "@mui/joy";
+import { Typography, Box, IconButton } from "@mui/joy";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { DataTable } from "./DataTable";
+import { useTokenBalances } from "@/api/query/alchemy.query";
 
-type Approval = {
-  token: string;
-  spender: string;
-  amount: string;
-  tokenAddress: string;
-};
+import { TokenBalanceDatum } from "@/api/alchemy/getTokenBalances";
+import { formatUnits, Hash } from "viem";
+import Image from "next/image";
+import { useMemo, useState } from "react";
+import ExpandMore from "@mui/icons-material/ExpandMore";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import { AllowanceChecker } from "./AllowanceChecker";
 
-const columnHelper = createColumnHelper<Approval>();
+const columnHelper = createColumnHelper<TokenBalanceDatum>();
+export const ApprovalsTable: React.FC<{ address: string }> = ({ address }) => {
+  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
 
-const columns = [
-  columnHelper.accessor("token", {
-    id: "token",
-    header: "Token",
-    cell: (info) => info.getValue(),
-  }),
-  columnHelper.accessor("spender", {
-    header: "Spender",
-    cell: (info) => (
-      <Typography level="body-sm">
-        {info.getValue().slice(0, 6)}...{info.getValue().slice(-4)}
-      </Typography>
-    ),
-  }),
-  columnHelper.accessor("amount", {
-    header: "Amount",
-    cell: (info) => info.getValue(),
-  }),
-  columnHelper.display({
-    id: "actions",
-    header: "Action",
-    cell: ({ row }) => (
-      <Button
-        size="sm"
-        color="danger"
-        onClick={() => console.log("Revoke", row.original)}
-      >
-        Revoke
-      </Button>
-    ),
-  }),
-] as ColumnDef<Approval, string | React.ReactNode>[];
+  const columns = useMemo(
+    () =>
+      [
+        columnHelper.display({
+          id: "token",
+          header: "Token",
+          cell: ({ row }) => {
+            const { image, name, symbol } = row.original;
+            return (
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                {image ? (
+                  <Image
+                    src={image}
+                    alt={symbol ?? name}
+                    width={24}
+                    height={24}
+                    style={{ borderRadius: "50%" }}
+                    unoptimized
+                  />
+                ) : (
+                  <Box
+                    sx={{
+                      width: 24,
+                      height: 24,
+                      backgroundColor: "blue.100",
+                      borderRadius: "50%",
+                    }}
+                  />
+                )}
+                <Typography level="body-sm">
+                  {name} {symbol && `(${symbol})`}
+                </Typography>
+              </Box>
+            );
+          },
+        }),
 
-export const ApprovalsTable = () => {
-  const data = useMemo<Approval[]>(
-    () => [
-      {
-        token: "USDC",
-        spender: "0xAbC123456789abcdef",
-        amount: "1000.00",
-        tokenAddress: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-      },
-      {
-        token: "DAI",
-        spender: "0xDef456789abcdef123",
-        amount: "500.50",
-        tokenAddress: "0x6B175474E89094C44Da98b954EedeAC495271d0F",
-      },
-    ],
-    []
+        columnHelper.accessor("tokenBalance", {
+          header: "Amount",
+          cell: (info) => {
+            const { tokenBalance, decimals } = info.row.original;
+            if (!decimals) return "-";
+            return formatUnits(BigInt(tokenBalance), decimals);
+          },
+        }),
+
+        columnHelper.display({
+          id: "actions",
+
+          size: 48,
+          cell: ({ row }) => {
+            const isExpanded = expandedIndex === row.index;
+            return (
+              <IconButton
+                size="sm"
+                variant="outlined"
+                onClick={() => setExpandedIndex(isExpanded ? null : row.index)}
+              >
+                {isExpanded ? <ExpandLess /> : <ExpandMore />}
+              </IconButton>
+            );
+          },
+        }),
+      ] as ColumnDef<TokenBalanceDatum, string | React.ReactNode>[],
+    [expandedIndex]
   );
 
-  return <DataTable<Approval> columns={columns} data={data} />;
+  const { data } = useTokenBalances({ address });
+
+  if (!data) {
+    return <Typography level="body-lg">Loading...</Typography>;
+  }
+
+  return (
+    <DataTable<TokenBalanceDatum>
+      columns={columns}
+      data={data}
+      expandedRowIndex={expandedIndex}
+      renderExpandedRow={(row) => (
+        <Box sx={{ p: 2, bgcolor: "background.level1" }}>
+          <AllowanceChecker
+            userAddress={address as `0x${string}`}
+            tokenAddress={row.contractAddress as Hash}
+          />
+        </Box>
+      )}
+    />
+  );
 };

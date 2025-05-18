@@ -1,5 +1,6 @@
 import { Sheet, Typography } from "@mui/joy";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import Link from "next/link";
 
 const AppHeader = () => (
   <header>
@@ -16,7 +17,7 @@ const AppHeader = () => (
         zIndex: 1000,
       }}
     >
-      <Typography level="h4" color="neutral">
+      <Typography component={Link} href="/" level="h4" color="neutral">
         Token Revoker
       </Typography>
       <ConnectButton />
