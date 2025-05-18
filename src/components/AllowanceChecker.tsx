@@ -1,7 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Box, Input, Button, Typography, Stack, ListDivider } from "@mui/joy";
+import {
+  Box,
+  Input,
+  Button,
+  Typography,
+  Stack,
+  ListDivider,
+  Link,
+} from "@mui/joy";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { erc20Abi, formatUnits, Hash } from "viem";
 import { parseUnits } from "viem/utils";
@@ -11,7 +19,7 @@ import {
   useWaitForTransactionReceipt,
   useChainId,
 } from "wagmi";
-import Link from "next/link";
+import NextLink from "next/link";
 
 interface AllowanceCheckerProps {
   userAddress: `0x${string}`;
@@ -138,6 +146,7 @@ const AllowanceChecker: React.FC<AllowanceCheckerProps> = ({
           <Typography level="body-md" mb={1}>
             Allowance for{" "}
             <Link
+              component={NextLink}
               href={`${
                 explorerBaseUrl[chainId] ?? "https://etherscan.io"
               }/address/${tokenAddress}`}

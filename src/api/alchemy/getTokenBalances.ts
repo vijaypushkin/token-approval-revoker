@@ -1,7 +1,7 @@
 "use server";
 
 import wretch from "wretch";
-import { env } from "@/env";
+import { serverEnv } from "@/env/server.env";
 import { TokenBalance } from "@/types/api/alchemy.types";
 import { TOKEN_DATA } from "@/data/token.data";
 
@@ -17,10 +17,10 @@ const shortenAddress = (address: string) => {
 };
 
 const alchemyRpcUrl: Record<number, string> = {
-  1: `https://eth-mainnet.g.alchemy.com/v2/${env.NEXT_SERVER_ALCHEMY_API_KEY}`,
-  137: `https://polygon-mainnet.g.alchemy.com/v2/${env.NEXT_SERVER_ALCHEMY_API_KEY}`,
-  10: `https://opt-mainnet.g.alchemy.com/v2/${env.NEXT_SERVER_ALCHEMY_API_KEY}`,
-  42161: `https://arb-mainnet.g.alchemy.com/v2/${env.NEXT_SERVER_ALCHEMY_API_KEY}`,
+  1: `https://eth-mainnet.g.alchemy.com/v2/${serverEnv.NEXT_SERVER_ALCHEMY_API_KEY}`,
+  137: `https://polygon-mainnet.g.alchemy.com/v2/${serverEnv.NEXT_SERVER_ALCHEMY_API_KEY}`,
+  10: `https://opt-mainnet.g.alchemy.com/v2/${serverEnv.NEXT_SERVER_ALCHEMY_API_KEY}`,
+  42161: `https://arb-mainnet.g.alchemy.com/v2/${serverEnv.NEXT_SERVER_ALCHEMY_API_KEY}`,
 };
 
 export const getTokenBalances = async (

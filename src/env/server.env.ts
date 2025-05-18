@@ -1,13 +1,13 @@
 import { z } from "zod";
 
-const envSchema = z.object({
+const serverSchema = z.object({
   NEXT_SERVER_ALCHEMY_API_KEY: z.string(),
 });
 
-type Env = z.infer<typeof envSchema>;
+type ServerEnv = z.infer<typeof serverSchema>;
 
-const getEnv = () => {
-  const parsed = envSchema.safeParse({
+const getServerEnv = () => {
+  const parsed = serverSchema.safeParse({
     NEXT_SERVER_ALCHEMY_API_KEY: process.env.NEXT_SERVER_ALCHEMY_API_KEY,
   });
 
@@ -17,6 +17,6 @@ const getEnv = () => {
   return parsed.data;
 };
 
-const env = getEnv();
+const serverEnv = getServerEnv();
 
-export { env, getEnv, type Env };
+export { serverEnv, getServerEnv, type ServerEnv };

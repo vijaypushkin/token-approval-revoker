@@ -19,8 +19,8 @@ export default function Home() {
             Token Approval Revoker
           </Typography>
           <Typography level="body-md" mb={4}>
-            View and revoke token approvals from any Ethereum address. Stay safe
-            and protect your assets from malicious spenders.
+            View and revoke token approvals from any EVM address. Stay safe and
+            protect your assets from malicious spenders.
           </Typography>
           <Button
             component={Link}
