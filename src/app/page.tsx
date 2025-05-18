@@ -28,7 +28,7 @@ export default function Home() {
             size="lg"
             variant="solid"
           >
-            Enter Your Address
+            Enter App
           </Button>
         </Sheet>
       </Box>
