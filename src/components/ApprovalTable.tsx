@@ -100,6 +100,8 @@ export const ApprovalsTable: React.FC<{ address: string }> = ({ address }) => {
           <AllowanceChecker
             userAddress={address as `0x${string}`}
             tokenAddress={row.contractAddress as Hash}
+            decimals={row.decimals ?? undefined}
+            tokenSymbol={row.symbol}
           />
         </Box>
       )}

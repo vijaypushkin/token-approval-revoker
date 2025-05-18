@@ -16,12 +16,22 @@ const shortenAddress = (address: string) => {
   return `${address.slice(0, 4)}...${address.slice(-4)}`;
 };
 
+const alchemyRpcUrl: Record<number, string> = {
+  1: `https://eth-mainnet.g.alchemy.com/v2/${env.NEXT_SERVER_ALCHEMY_API_KEY}`,
+  137: `https://polygon-mainnet.g.alchemy.com/v2/${env.NEXT_SERVER_ALCHEMY_API_KEY}`,
+  10: `https://opt-mainnet.g.alchemy.com/v2/${env.NEXT_SERVER_ALCHEMY_API_KEY}`,
+  42161: `https://arb-mainnet.g.alchemy.com/v2/${env.NEXT_SERVER_ALCHEMY_API_KEY}`,
+};
+
 export const getTokenBalances = async (
-  address: string
+  address: string,
+  chainId: number
 ): Promise<TokenBalanceDatum[]> => {
-  const res = await wretch(
-    `https://eth-mainnet.g.alchemy.com/v2/${env.NEXT_SERVER_ALCHEMY_API_KEY}`
-  )
+  const url = alchemyRpcUrl[chainId];
+
+  if (!url) throw new Error("Alchemy unsupported on this chain");
+
+  const res = await wretch(url)
     .post({
       jsonrpc: "2.0",
       id: 1,
