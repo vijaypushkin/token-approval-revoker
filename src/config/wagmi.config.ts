@@ -1,13 +1,11 @@
-import { http, createConfig } from "wagmi";
-import { mainnet, sepolia, polygon } from "wagmi/chains";
+import { getDefaultConfig } from "@rainbow-me/rainbowkit";
+import { mainnet, polygon, optimism, arbitrum, bsc } from "wagmi/chains";
 
-const wagmiConfig = createConfig({
-  chains: [mainnet, sepolia, polygon],
-  transports: {
-    [mainnet.id]: http(),
-    [sepolia.id]: http(),
-    [polygon.id]: http(),
-  },
+const wagmiConfig = getDefaultConfig({
+  appName: "Token Approval Revoker",
+  projectId: "YOUR_PROJECT_ID",
+  chains: [mainnet, polygon, optimism, arbitrum, bsc],
+  ssr: true,
 });
 
 export { wagmiConfig };

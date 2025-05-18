@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import { CssBaseline, CssVarsProvider } from "@mui/joy";
+
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import "@rainbow-me/rainbowkit/styles.css";
 import { Providers } from "./provider";
 
 const geistSans = Geist({
@@ -28,10 +29,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <CssVarsProvider>
-          <CssBaseline />
-          <Providers>{children}</Providers>
-        </CssVarsProvider>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
