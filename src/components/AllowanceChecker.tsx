@@ -11,7 +11,7 @@ import {
   Link,
 } from "@mui/joy";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-import { erc20Abi, formatUnits, Hash } from "viem";
+import { erc20Abi, Hash } from "viem";
 import { parseUnits } from "viem/utils";
 import {
   useReadContract,
@@ -20,6 +20,7 @@ import {
   useChainId,
 } from "wagmi";
 import NextLink from "next/link";
+import BigNumber from "bignumber.js";
 
 interface AllowanceCheckerProps {
   userAddress: `0x${string}`;
@@ -127,13 +128,13 @@ const AllowanceChecker: React.FC<AllowanceCheckerProps> = ({
       <Stack direction="row" spacing={1} mb={1}>
         <Input
           fullWidth
-          size="lg"
+          size="md"
           placeholder="Spender address"
           value={input}
           onChange={(e) => setInput(e.target.value)}
         />
         <Button
-          size="lg"
+          size="md"
           onClick={handleCheck}
           loading={Boolean(spender) && isChecking}
         >
@@ -157,25 +158,47 @@ const AllowanceChecker: React.FC<AllowanceCheckerProps> = ({
               {contractName ?? "Unknown Contract"}{" "}
               <OpenInNewIcon sx={{ width: 14, height: 14 }} />
             </Link>
-            : {formatUnits(allowance, decimals)} {tokenSymbol}
+            :{" "}
+            {BigNumber(allowance)
+              .dividedBy(new BigNumber(10).pow(decimals))
+              .toFormat(4)}{" "}
+            {tokenSymbol}
           </Typography>
-          <Stack direction="row" spacing={1} justifyContent={"flex-end"}>
-            <Input
-              size="lg"
-              placeholder="Adjust value"
-              value={adjustValue}
-              onChange={(e) => setAdjustValue(e.target.value)}
+
+          <ListDivider
+            orientation="horizontal"
+            sx={{ display: { xs: "block", sm: "none " } }}
+          />
+
+          <Stack
+            direction={{ xs: "column", sm: "row" }}
+            spacing={1}
+            mt={1}
+            justifyContent={"flex-end"}
+          >
+            <Stack direction="row" spacing={1}>
+              <Input
+                size="md"
+                placeholder="Adjust value"
+                value={adjustValue}
+                onChange={(e) => setAdjustValue(e.target.value)}
+              />
+              <Button
+                size="md"
+                onClick={handleAdjust}
+                loading={txType === "set" && (isWriting || isWaiting)}
+              >
+                Set
+              </Button>
+            </Stack>
+
+            <ListDivider
+              orientation="vertical"
+              sx={{ display: { xs: "none", sm: "block" } }}
             />
+
             <Button
-              size="lg"
-              onClick={handleAdjust}
-              loading={txType === "set" && (isWriting || isWaiting)}
-            >
-              Set
-            </Button>
-            <ListDivider orientation="vertical" />
-            <Button
-              size="lg"
+              size="md"
               color="danger"
               onClick={handleRevoke}
               loading={txType === "revoke" && (isWriting || isWaiting)}

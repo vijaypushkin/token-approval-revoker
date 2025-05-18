@@ -6,8 +6,9 @@ import { DataTable } from "./DataTable";
 import { useTokenBalances } from "@/api/query/alchemy.query";
 
 import { TokenBalanceDatum } from "@/api/alchemy/getTokenBalances";
-import { formatUnits, Hash } from "viem";
+import { Hash } from "viem";
 import Image from "next/image";
+import BigNumber from "bignumber.js";
 import { useMemo, useState } from "react";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import ExpandLess from "@mui/icons-material/ExpandLess";
@@ -24,6 +25,7 @@ export const ApprovalsTable: React.FC<{ address: string }> = ({ address }) => {
         columnHelper.display({
           id: "token",
           header: "Token",
+          size: 120,
           cell: ({ row }) => {
             const { image, name, symbol } = row.original;
             return (
@@ -57,10 +59,13 @@ export const ApprovalsTable: React.FC<{ address: string }> = ({ address }) => {
 
         columnHelper.accessor("tokenBalance", {
           header: "Amount",
+          size: 120,
           cell: (info) => {
             const { tokenBalance, decimals } = info.row.original;
             if (!decimals) return "-";
-            return formatUnits(BigInt(tokenBalance), decimals);
+            return BigNumber(tokenBalance)
+              .dividedBy(new BigNumber(10).pow(decimals))
+              .toFormat(4);
           },
         }),
 
