@@ -12,6 +12,7 @@ import { useMemo, useState } from "react";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import { AllowanceChecker } from "./AllowanceChecker";
+import { DataTableSkeleton } from "./DataTableSkeleton";
 
 const columnHelper = createColumnHelper<TokenBalanceDatum>();
 export const ApprovalsTable: React.FC<{ address: string }> = ({ address }) => {
@@ -87,7 +88,7 @@ export const ApprovalsTable: React.FC<{ address: string }> = ({ address }) => {
   const { data } = useTokenBalances({ address });
 
   if (!data) {
-    return <Typography level="body-lg">Loading...</Typography>;
+    return <DataTableSkeleton />;
   }
 
   return (
